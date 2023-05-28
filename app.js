@@ -51,7 +51,7 @@ const makeList = (colName) => {
 
   //* Delete Button
   const deleteBtn = document.createElement("button");
-  deleteBtn.addEventListener("click", deleteList(colID));
+  deleteBtn.addEventListener("click", deleteList);
   const delIconSpan = document.createElement("span");
   deleteBtn.classList.add("delete-btn");
   delIconSpan.classList.add("material-symbols-rounded");
@@ -115,13 +115,11 @@ const makeList = (colName) => {
   board.appendChild(col);
 };
 
-const deleteList = (parent) => {
-  console.log("clicked");
-  console.log(parent);
-  const listID = parent;
+const deleteList = (e) => {
+  const listID = e.target.parentElement.parentElement.attributes.id.value;
   const listToDelete = document.getElementById(listID);
-  console.dir(listToDelete);
-  // listToDelete.remove();
+
+  listToDelete.remove();
 };
 
 const makeCard = (e, cardName, parent) => {
