@@ -1,5 +1,6 @@
 const board = document.getElementById("board");
 const colForm = document.querySelector(".column-form");
+
 const idGenerator = () => {
   const letterOne = Math.floor(Math.random() * 26) + 65;
   const letterTwo = Math.floor(Math.random() * 26) + 65;
@@ -43,38 +44,68 @@ const makeList = (colName) => {
   //* Generate unique id per column
   const colID = idGenerator();
 
-  //* Create column with delete functionality
+  //* Create column
   const col = document.createElement("div");
+  col.setAttribute("id", colID);
+  col.classList.add("list");
+
+  //* Delete Button
   const deleteBtn = document.createElement("button");
-  deleteBtn.textContent = "Delete list";
-  deleteBtn.addEventListener("click", deleteList);
+  deleteBtn.addEventListener("click", deleteList(colID));
+  const delIconSpan = document.createElement("span");
+  deleteBtn.classList.add("delete-btn");
+  delIconSpan.classList.add("material-symbols-rounded");
+  delIconSpan.classList.add("non-clickable");
+  delIconSpan.textContent = "delete";
+  deleteBtn.appendChild(delIconSpan);
+
+  //* Title area and delete
+  const titleDiv = document.createElement("div");
+  titleDiv.classList.add("flex-row");
+  const columnName = document.createElement("h3");
+  columnName.innerText = `${colName}`;
+  titleDiv.appendChild(columnName);
+  titleDiv.appendChild(deleteBtn);
+
+  //* Area for cards
+  const cardList = document.createElement("div");
+  const cardListId = idGenerator();
+  cardList.setAttribute("id", cardListId);
+  cardList.classList.add("flex-col");
 
   //* Create card name input form
   const cardNameInput = document.createElement("form");
+  cardNameInput.classList.add("flex-row");
+
   const input = document.createElement("input");
   input.setAttribute("type", "text");
   input.setAttribute("name", "cardName");
+
   const addCard = document.createElement("button");
   addCard.setAttribute("type", "submit");
   addCard.addEventListener("click", (e) => {
+    const cardInput = getFormData(cardNameInput);
     e.preventDefault();
-    makeCard(e, getFormData(cardNameInput));
-    cardNameInput.reset();
+    if (cardInput.length > 0) {
+      makeCard(e, cardInput, cardListId);
+      cardNameInput.reset();
+    }
   });
-  addCard.textContent = "Add Card";
+
+  const addCardSpan = document.createElement("span");
+  addCardSpan.classList.add("material-symbols-rounded");
+  addCard.classList.add("button");
+  addCardSpan.textContent = "add_circle";
+  addCard.appendChild(addCardSpan);
 
   //* Append input and submit buttons to form
   cardNameInput.appendChild(input);
   cardNameInput.appendChild(addCard);
 
-  //* Give column styles and set ID
-  col.classList.add("list");
-  col.setAttribute("id", colID);
-  col.textContent = `${colName}`;
-
   //* Append delete, card creation and drag & drop functionality to column
-  col.appendChild(deleteBtn);
+  col.appendChild(titleDiv);
   col.appendChild(cardNameInput);
+  col.appendChild(cardList);
   col.addEventListener("dragenter", dragEnter);
   col.addEventListener("dragover", dragOver);
   col.addEventListener("dragleave", dragLeave);
@@ -84,16 +115,19 @@ const makeList = (colName) => {
   board.appendChild(col);
 };
 
-const deleteList = (e) => {
-  const listID = e.target.parentElement.attributes.id.value;
+const deleteList = (parent) => {
+  console.log("clicked");
+  console.log(parent);
+  const listID = parent;
   const listToDelete = document.getElementById(listID);
-  listToDelete.remove();
+  console.dir(listToDelete);
+  // listToDelete.remove();
 };
 
-const makeCard = (e, cardName) => {
+const makeCard = (e, cardName, parent) => {
   e.preventDefault();
   const cardID = idGenerator();
-  const parent = e.target.parentElement;
+  const parentDiv = document.getElementById(parent);
   const card = document.createElement("div");
   card.setAttribute("draggable", true);
   card.setAttribute("id", cardID);
@@ -102,9 +136,14 @@ const makeCard = (e, cardName) => {
   card.classList.add("card");
   const cardDelete = document.createElement("button");
   cardDelete.addEventListener("click", deleteCard);
-  cardDelete.textContent = "X";
+  cardDelete.classList.add("delete-btn");
+  const iconSpan = document.createElement("span");
+  iconSpan.classList.add("material-symbols-rounded");
+  iconSpan.classList.add("non-clickable");
+  iconSpan.textContent = "delete";
+  cardDelete.appendChild(iconSpan);
   card.appendChild(cardDelete);
-  parent.appendChild(card);
+  parentDiv.appendChild(card);
 };
 
 const deleteCard = (e) => {
