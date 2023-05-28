@@ -7,10 +7,10 @@ A basic Kanban board, initially made using pure html and vanilla JavaScript, use
 - Delete cards
 - Drag and drop cards between all columns
 - Delete columns
+- Create custom named cards
 
 ## Features in progress:
 
-- Custom named cards
 - Editing cards
 - Local storage
 

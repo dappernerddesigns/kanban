@@ -24,14 +24,18 @@ const idGenerator = () => {
   return letterArray.join("");
 };
 
+const getFormData = (form) => {
+  let data = "";
+  const formData = new FormData(form);
+  for (const pair of formData.entries()) {
+    data = pair[1];
+  }
+  return data;
+};
+
 colForm.addEventListener("submit", (e) => {
   e.preventDefault();
-  let colName = "";
-  const formData = new FormData(colForm);
-  for (const pair of formData.entries()) {
-    colName = pair[1];
-  }
-  makeList(colName);
+  makeList(getFormData(colForm));
   colForm.reset();
 });
 
@@ -52,6 +56,11 @@ const makeList = (colName) => {
   input.setAttribute("name", "cardName");
   const addCard = document.createElement("button");
   addCard.setAttribute("type", "submit");
+  addCard.addEventListener("click", (e) => {
+    e.preventDefault();
+    makeCard(e, getFormData(cardNameInput));
+    cardNameInput.reset();
+  });
   addCard.textContent = "Add Card";
 
   //* Append input and submit buttons to form
@@ -81,7 +90,7 @@ const deleteList = (e) => {
   listToDelete.remove();
 };
 
-const makeCard = (e) => {
+const makeCard = (e, cardName) => {
   e.preventDefault();
   const cardID = idGenerator();
   const parent = e.target.parentElement;
@@ -89,7 +98,7 @@ const makeCard = (e) => {
   card.setAttribute("draggable", true);
   card.setAttribute("id", cardID);
   card.addEventListener("dragstart", dragStart);
-  card.textContent = `new card ${cardID}`;
+  card.textContent = `${cardName}`;
   card.classList.add("card");
   const cardDelete = document.createElement("button");
   cardDelete.addEventListener("click", deleteCard);
