@@ -1,0 +1,25 @@
+#board {
+  display: flex;
+  flex-direction: row;
+  /* justify-content: space-between; */
+}
+
+.list {
+  width: 200px;
+  background-color: aqua;
+  height: 80vh;
+}
+
+.card {
+  background-color: blueviolet;
+  width: 90%;
+  margin: auto;
+}
+
+.hide {
+  display: none;
+}
+
+.drag-over {
+  border: dashed 3px red;
+}
